@@ -48,6 +48,10 @@ public class Matrix {
     }
 
     public Matrix(Matrix obj) throws MatrixException {
+        alloc(obj.dy, obj.dx);
+        for(int y = 0; y < dy; y++)
+            for(int x = 0; x < dx; x++)
+                array[y][x] = obj.array[y][x];
 
     }
 
