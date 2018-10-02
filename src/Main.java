@@ -35,10 +35,46 @@ public class Main {
         Matrix oScreen = new Matrix(arrayScreen);
         System.out.println("oScreen");
         drawMatrix(oScreen); System.out.println();
+        //배경 및 테두리 출력
 
         Matrix currBlk = new Matrix(arrayBlk);
         System.out.println("currBlk");
         drawMatrix(currBlk); System.out.println();
+        //현재 블록 출력
+
+        int top = 0;
+        int left = 4;
+        //5번째 사각형
+        Matrix tempBlk = oScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+        //top,left의 좌표가 가리키는 공간에 currBlk의 가/세 길이를 더해줌--> botton, right
+        System.out.println("tempBlk (after clip):");
+        drawMatrix(tempBlk); System.out.println();
+
+        tempBlk = tempBlk.add(currBlk);
+        //내가 배경에서 선택한 위치의 임식 공간을 떼어내서 현재 블럭을 더한다
+        System.out.println("tempBlk (after add):");
+        drawMatrix(tempBlk); System.out.println();
+
+        oScreen.paste(tempBlk, top, left);
+        System.out.println("oScreen (after paste): ");
+        drawMatrix(oScreen); System.out.println();
+
+        System.out.println("currBlk.sum()=" + currBlk.sum());
+        System.out.println();
+
+        tempBlk.mulc(2);
+        System.out.println("oScreen (after paste): ");
+        tempBlk.print(); System.out.println();
+
+        System.out.println("currBlk.anyGreaterThan(1)=" + currBlk.anyGreaterThan(1));
+        System.out.println("tempBlk.anyGreaterThan(1)=" + tempBlk.anyGreaterThan(1));
+
+
+
+
+
+
+
     }
 
     public static void drawMatrix(Matrix m) {

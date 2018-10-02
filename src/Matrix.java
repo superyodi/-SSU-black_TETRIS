@@ -103,9 +103,46 @@ public class Matrix {
         }
         return temp;
     }
-//    public int sum(){}
-//    public  void mulc(int coef){}
-//    public void print(){}
+       public int sum(){
+        int total = 0;
+        for(int y = 0; y < dy; y++)
+            for (int x = 0; x < dx; x++)
+                total += array[y][x];
+        return total;
+       }
+       public  void mulc(int coef){
+         for(int y = 0; y < dy; y++)
+             for(int x = 0; x < dx; x++)
+                 array[y][x] *= array[y][x] * coef;
+       }
+       public void print(){
+           for (int y = 0; y < dy; y++) {
+               for (int x = 0; x < dx; x++) {
+                   System.out.print(array[y][x]+" ");
+               }
+               System.out.println();
+           }
+       }
+       public boolean anyGreaterThan(int val){
+        for(int y = 0; y < dy; y++){
+            for(int x = 0; x < dx; x++){
+                if(array[y][x] > val){
+                    return true;
+                }
+            }
+        }
+           return false;
+       }
+//       Matrix int2bool() throws  Exception {
+//        //transform [int] to [boolean]
+//        Matrix temp = new Matrix(dy, dx);
+//        int t_array[][] = temp.get_array();
+//        for(int y = 0; y < dy; y++)
+//            for(int x = 0; x < dx; x++)
+//                t_array[y][x] = (array[y][x] != 0 ? 1: 0);
+//        return temp;
+//       }
+
 //      end of Matrix
 }
 
