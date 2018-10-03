@@ -9,6 +9,11 @@ public class Main {
             {1, 0, 0, 0},
             {1, 0, 0, 0},
     };
+    static  int[][] arrayBlk2 = {
+            {0 , 1, 0},
+            {1 , 1, 1},
+            {0,  0, 0},
+    };
     private static int iScreenDy = 15;
     private static int iScreenDx = 10;
     private static int iScreenDw = 4;
@@ -55,24 +60,6 @@ public class Main {
             System.out.println();
         }
     }
-
-//    public static void printMatrix(Matrix m) {
-//        int[][] array = m.get_array();
-//        for(int y = 0; y < m.get_dy(); y++){
-//            for(int x = 0; x < m.get_dx(); x++){
-//                if(array[y][x] == 1) {
-//                    System.out.print("■");
-//                }else if(array[y][x] == 0) {
-//                    System.out.print("□");
-//                }
-//                else {
-//                    System.out.print("X");
-//                }
-//            }
-//            System.out.println();
-//        }
-//    }
-
     //for "key input" methods
     private  static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private  static String line = null;
@@ -97,96 +84,76 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        int first_left = iScreenDw + iScreenDx/2 - 2;
         int top = 0;
-        int left = iScreenDw + iScreenDx/2 -2;
+        int left = first_left;
         //??
-        int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx,iScreenDw);
+        int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
         char key;
         //입력받은 키
 
+
         Matrix iScreen = new Matrix(arrayScreen);
-       //테트리스 배경 및 테두리(변하지 않음)
+        //테트리스 배경 및 테두리(변하지 않음)
         Matrix currBlk = new Matrix(arrayBlk);
-        Matrix tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+        Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
         tempBlk = tempBlk.add(currBlk);
         Matrix oScreen = new Matrix(iScreen);
         oScreen.paste(tempBlk, top, left);
-        printScreen(oScreen); System.out.println();
+        printScreen(oScreen);
+        System.out.println();
 
-        while ((key = getKey()) != 'q'){
+        boolean newBlockNeeded = false;
+
+        while ((key = getKey()) != 'q') {
             //q를 입력하면 게임 종료
             switch (key) {
-                case 'a':
-                    left--;
-                    break;
-                case 'd':
-                    left++;
-                    break;
-                case 's':
-                    top++;
-                    break;
-                case 'w':
-                    top--;
-                    break;
+                case 'a': left--; break;
+                case 'd': left++; break;
+                case 's': top++; break;
+                case 'w': top--; break;
                 default:
                     System.out.println("UNKNOWN KEY!!!");
             }
             tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
             //임시 공간의 위치& 크기 정하기
-            tempBlk=tempBlk.add(currBlk);
+            tempBlk = tempBlk.add(currBlk);
             //충돌여부 판단
-            if(tempBlk.anyGreaterThan(1)){
+            if (tempBlk.anyGreaterThan(1)) {
                 switch (key) {
                     //원상복구
-                    case 'a':
-                        left++;
-                        break;
-                    case 'd':
-                        left--;
-                        break;
-                    case 's':
-                        top--;
-                        break;
-                    case 'w':
-                        top++;
-                        break;
+                    case 'a': left++; break;
+                    case 'd': left--; break;
+                    case 's': top--; newBlockNeeded = true; break;
+                    case 'w': top++; break;
                 }
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
-                tempBlk=tempBlk.add(currBlk);
+                tempBlk = tempBlk.add(currBlk);
                 //충돌하지 않는 위치에 다시 clip() & add()
             }
             oScreen = new Matrix(iScreen);
             oScreen.paste(tempBlk, top, left);
-            printScreen(oScreen); System.out.println();
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-    public static void drawMatrix(Matrix m) {
-        int[][] array = m.get_array();
-        for(int y = 0; y < m.get_dy(); y++){
-            for(int x = 0; x < m.get_dx(); x++){
-                if(array[y][x] == 1) {
-                    System.out.print("■");
-                }else if(array[y][x] == 0) {
-                    System.out.print("□");
+            printScreen(oScreen);System.out.println();
+            if(newBlockNeeded) {
+                //1. 바닥충돌 경우
+                //위치 재설정
+                top = 0; left = first_left;
+                //currentBlk 재설정(난수)
+                currBlk = new Matrix(arrayBlk2);
+                tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                tempBlk = tempBlk.add(currBlk);
+                if ( tempBlk.anyGreaterThan(1)) {
+                    System.out.println("게임 오버");
+                    break;
                 }
-                else {
-                    System.out.print("X");
-                }
+                oScreen = new Matrix(iScreen);
+                oScreen.paste(tempBlk, top, left);
+
+                System.out.println("게임을 다시 시작 합니다");
+                printScreen(oScreen);
+                newBlockNeeded = false;
+
             }
-            System.out.println();
         }
     }
-
 }
