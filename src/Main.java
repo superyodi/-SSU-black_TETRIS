@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 public class Main {
     static int[][] arrayBlk = {
@@ -19,6 +20,7 @@ public class Main {
     private static int iScreenDw = 4;
     //왜 3이 아닐까??
     //짝대기는 4*4 배열, 이것까지 커버해야한다.
+    private static Random random = new Random();
     private static int[][] createArrayScreen(int dy,int dx, int dw) {
         int x,y;
         int[][] array = new int[dy+dw][dx+2*dw];
@@ -61,8 +63,8 @@ public class Main {
         }
     }
     //for "key input" methods
-    private  static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private  static String line = null;
+    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static String line = null;
     private static int nKeys = 0;
     private static char getKey() throws IOException {
         char ch;
@@ -82,9 +84,202 @@ public class Main {
         nKeys--;
         return ch;
     }
+    private static Matrix setOfBlockObjects (int blockType, int blockDegree) throws MatrixException {
+        int idxBlockType = blockType;
+        int idxBlockDegree = blockDegree%4;
+        int[][] temp_array;
+        Matrix temp;
+        switch (idxBlockType){
+            case 0:
+                temp_array = new int[][]{
+                        {1, 0, 0},
+                        {1, 0, 0},
+                        {1, 1, 0}
+                };
+                switch (idxBlockDegree) {
+                    case 0:
+                        temp_array = new int[][] {
+                                {1, 0, 0},
+                                {1, 0, 0},
+                                {1, 1, 0}
+                        }; break;
+                    case 1:
+                        temp_array = new int[][] {
+                                {0, 0, 1},
+                                {1, 1, 1},
+                                {0, 0, 0},
+                        }; break;
+                    case 2:
+                        temp_array = new int[][] {
+                                {0, 1, 1},
+                                {0, 0, 1},
+                                {0, 0, 1}
+                        }; break;
+                    case 3:
+                        temp_array = new int[][] {
+                                {1, 1, 1},
+                                {1, 0, 0},
+                                {0, 0, 0}
+                        }; break;
+                }
+                temp = new Matrix(temp_array);
+                return temp;
+            case 1:
+                temp_array = new int[][]{
+                        {0, 0, 1},
+                        {0, 0, 1},
+                        {0, 1, 1}
+                };
+                switch (idxBlockDegree) {
+                    case 0:
+                        temp_array = new int[][] {
+                                {0, 0, 1},
+                                {0, 0, 1},
+                                {0, 1, 1}
+                        }; break;
+                    case 1:
+                        temp_array = new int[][] {
+                                {1, 0, 0},
+                                {1, 1, 1},
+                                {0, 0, 0},
+                        }; break;
+                    case 2:
+                        temp_array = new int[][] {
+                                {0, 1, 1},
+                                {0, 1, 0},
+                                {0, 1, 0}
+                        }; break;
+                    case 3:
+                        temp_array = new int[][] {
+                                {1, 1, 1},
+                                {0, 0, 1},
+                                {0, 0, 0}
+                        }; break;
+                }
+                temp = new Matrix(temp_array);
+                return temp;
+            case  2:
+            temp_array = new int[][]{
+                    {0, 1, 0},
+                    {1, 1, 1},
+                    {0, 0, 0},
+            };
+                switch (idxBlockDegree) {
+                    case 0:
+                        temp_array = new int[][] {
+                                {0, 1, 0},
+                                {1, 1, 1},
+                                {0, 0, 0}
+                        }; break;
+                    case 1:
+                        temp_array = new int[][] {
+                                {0, 1, 0},
+                                {0, 1, 1},
+                                {0, 1, 0}
+                        }; break;
+                    case 2:
+                        temp_array = new int[][] {
+                                {1, 1, 1},
+                                {0, 1, 0},
+                                {0, 0, 0}
+                        }; break;
+                    case 3:
+                        temp_array = new int[][] {
+                                {0, 0, 1},
+                                {0, 1, 1},
+                                {0, 0, 1}
+                        }; break;
+                }
+            temp = new Matrix(temp_array);
+            return temp;
+            case 3:
+            temp_array = new int[][]{
+                    {0, 1, 1},
+                    {1, 1, 0},
+                    {0, 0, 0},
+            };
+            if(idxBlockDegree%2==0){
+                temp_array = new int[][]{
+                        {0, 1, 1},
+                        {1, 1, 0},
+                        {0, 0, 0},
+                };
+            }else{
+                temp_array = new int[][]{
+                        {1, 0, 0},
+                        {1, 1, 0},
+                        {0, 1, 0},
+                };
+            }
+            temp = new Matrix(temp_array);
+            return temp;
+            case 4:
+                temp_array = new int[][]{
+                        {1, 1, 0},
+                        {0, 1, 1},
+                        {0, 0, 0},
+                };
+                if(idxBlockDegree%2==0){
+                    temp_array = new int[][]{
+                            {1, 1, 0},
+                            {0, 1, 1},
+                            {0, 0, 0},
+                    };
+                }else{
+                    temp_array = new int[][]{
+                            {0, 0, 1},
+                            {0, 1, 1},
+                            {0, 1, 0},
+                    };
+                }
+                temp = new Matrix(temp_array);
+                return temp;
+            case 5:
+                temp_array = new int[][]{
+                        {0, 0, 1, 0},
+                        {0, 0, 1, 0},
+                        {0, 0, 1, 0},
+                        {0, 0, 1, 0},
+                };
+                if(idxBlockDegree%2==0){
+                    temp_array = new int[][]{
+                            {0, 0, 1, 0},
+                            {0, 0, 1, 0},
+                            {0, 0, 1, 0},
+                            {0, 0, 1, 0},
+                    };
+                }else{
+                    temp_array = new int[][]{
+                            {1, 1, 1, 1},
+                            {0, 0, 0, 0},
+                            {0, 0, 0, 0},
+                            {0, 0, 0, 0},
+                    };
+                }
+                temp = new Matrix(temp_array);
+                return temp;
+            case 6:
+            temp_array = new int[][]{
+                    {1, 1},
+                    {1, 1},
+            };
+            temp = new Matrix(temp_array);
+            return temp;
+           default:
+               temp_array = new int[][]{
+                       {0, 0, 0},
+                       {0, 0, 0},
+                       {0, 0, 0},
+               };
+               temp = new Matrix(temp_array);
+               return temp;
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         int first_left = iScreenDw + iScreenDx/2 - 2;
+        int idxBlockDegree = 0;
+        int idxBlockType = random.nextInt(7);
         int top = 0;
         int left = first_left;
         //??
@@ -95,7 +290,7 @@ public class Main {
 
         Matrix iScreen = new Matrix(arrayScreen);
         //테트리스 배경 및 테두리(변하지 않음)
-        Matrix currBlk = new Matrix(arrayBlk);
+        Matrix currBlk =  setOfBlockObjects(idxBlockType, idxBlockDegree);
         Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
         tempBlk = tempBlk.add(currBlk);
         Matrix oScreen = new Matrix(iScreen);
@@ -111,7 +306,7 @@ public class Main {
                 case 'a': left--; break;
                 case 'd': left++; break;
                 case 's': top++; break;
-                case 'w': top--; break;
+                case 'w': idxBlockDegree++; currBlk = setOfBlockObjects(idxBlockType, idxBlockDegree); break; //rotate
                 default:
                     System.out.println("UNKNOWN KEY!!!");
             }
@@ -124,8 +319,8 @@ public class Main {
                     //원상복구
                     case 'a': left++; break;
                     case 'd': left--; break;
-                    case 's': top--; newBlockNeeded = true; break;
-                    case 'w': top++; break;
+                    case 's': newBlockNeeded = true; break;
+                    case 'w': break; //rotate
                 }
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
                 tempBlk = tempBlk.add(currBlk);
@@ -137,14 +332,17 @@ public class Main {
             if(newBlockNeeded) {
                 //1. 바닥충돌 경우
                 //위치 재설정
-                top = 0; left = first_left;
+                top = 0; left = first_left; idxBlockDegree = 0; idxBlockType = random.nextInt(7);
                 //currentBlk 재설정(난수)
-                currBlk = new Matrix(arrayBlk2);
+                currBlk = setOfBlockObjects(idxBlockType, idxBlockDegree);
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
                 tempBlk = tempBlk.add(currBlk);
                 if ( tempBlk.anyGreaterThan(1)) {
                     System.out.println("게임 오버");
-                    break;
+                    System.exit(0);
+                    //현재 실행 프로세스 강제 종료
+                    //정상종료: 0, 비정상 종료: 0이외의 숫자
+
                 }
                 oScreen = new Matrix(iScreen);
                 oScreen.paste(tempBlk, top, left);
