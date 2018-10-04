@@ -304,6 +304,7 @@ public class Main {
                         tempBlk = tempBlk.add(currBlk);
                     }
                     top--;
+                    newBlockNeeded = true;
                     break; //drop the block
                 default:
                     System.out.println("UNKNOWN KEY!!!");
