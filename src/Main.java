@@ -265,8 +265,8 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws Exception {    main2(args);    }
-    public static void main2(String[] args) throws Exception {
+
+    public static void main(String[] args) throws Exception {
         int first_left = iScreenDw + iScreenDx/2 - 2;
         int idxBlockDegree = 0;
         int idxBlockType = random.nextInt(7);
@@ -355,35 +355,5 @@ public class Main {
 
             }
         }
-    }
-    public static void main5(String[] args) throws MatrixException {
-        int first_left = iScreenDw + iScreenDx/2 - 2;
-        int idxBlockDegree = 0;
-        int idxBlockType = random.nextInt(7);
-        int top = iScreenDy - 1;
-        int left = iScreenDw;
-        //??
-        int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
-        char key;
-        boolean newBlockNeeded = false;
-        int[][] temp =  {
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-
-        };
-
-
-        Matrix iScreen = new Matrix(arrayScreen);
-        //테트리스 배경 및 테두리(변하지 않음)
-        Matrix currBlk =  new Matrix(temp);
-        Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
-        tempBlk = tempBlk.add(currBlk);
-        Matrix oScreen = new Matrix(iScreen);
-        oScreen.paste(tempBlk, top, left);
-        printScreen(oScreen);
-        System.out.println();
-        //test용
-        oScreen.deleteFullLine(iScreenDw);
-        printScreen(oScreen);
-        System.out.println();
     }
 }
