@@ -4,17 +4,6 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Main {
-    static int[][] arrayBlk = {
-            {1, 0, 0, 0},
-            {1, 0, 0, 0},
-            {1, 0, 0, 0},
-            {1, 0, 0, 0},
-    };
-    static  int[][] arrayBlk2 = {
-            {0 , 1, 0},
-            {1 , 1, 1},
-            {0,  0, 0},
-    };
     private static int iScreenDy = 15;
     private static int iScreenDx = 10;
     private static int iScreenDw = 4;
@@ -276,20 +265,22 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {    main2(args);    }
+    public static void main2(String[] args) throws Exception {
         int first_left = iScreenDw + iScreenDx/2 - 2;
         int idxBlockDegree = 0;
         int idxBlockType = random.nextInt(7);
         int top = 0;
         int left = first_left;
-        //??
         int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
         char key;
-        //입력받은 키
+        boolean newBlockNeeded = false;
+        boolean full_line = false;
 
 
+        //테트리스의 전체 배경
         Matrix iScreen = new Matrix(arrayScreen);
-        //테트리스 배경 및 테두리(변하지 않음)
+        //첫 화면에 난수 블럭을 세팅하고 시작함.
         Matrix currBlk =  setOfBlockObjects(idxBlockType, idxBlockDegree);
         Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
         tempBlk = tempBlk.add(currBlk);
@@ -298,7 +289,6 @@ public class Main {
         printScreen(oScreen);
         System.out.println();
 
-        boolean newBlockNeeded = false;
 
         while ((key = getKey()) != 'q') {
             //q를 입력하면 게임 종료
@@ -307,6 +297,14 @@ public class Main {
                 case 'd': left++; break;
                 case 's': top++; break;
                 case 'w': idxBlockDegree++; currBlk = setOfBlockObjects(idxBlockType, idxBlockDegree); break; //rotate
+                case ' ':
+                    while (!tempBlk.anyGreaterThan(1)){
+                        top++;
+                        tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                        tempBlk = tempBlk.add(currBlk);
+                    }
+                    top--;
+                    break; //drop the block
                 default:
                     System.out.println("UNKNOWN KEY!!!");
             }
@@ -319,8 +317,10 @@ public class Main {
                     //원상복구
                     case 'a': left++; break;
                     case 'd': left--; break;
-                    case 's': newBlockNeeded = true; break;
+                    case 's': top--; newBlockNeeded = true; break;
                     case 'w': break; //rotate
+                    case ' ': newBlockNeeded = true; break;
+                    //s, ' ' 는 바닥과 충돌이니까 성공적 -> 새로운 난수 블럭 생성
                 }
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
                 tempBlk = tempBlk.add(currBlk);
@@ -329,9 +329,12 @@ public class Main {
             oScreen = new Matrix(iScreen);
             oScreen.paste(tempBlk, top, left);
             printScreen(oScreen);System.out.println();
+            //full line delete
+            oScreen.deleteFullLine(iScreenDw);
             if(newBlockNeeded) {
-                //1. 바닥충돌 경우
+                //바닥충돌 경우
                 //위치 재설정
+                iScreen = new Matrix(oScreen);
                 top = 0; left = first_left; idxBlockDegree = 0; idxBlockType = random.nextInt(7);
                 //currentBlk 재설정(난수)
                 currBlk = setOfBlockObjects(idxBlockType, idxBlockDegree);
@@ -347,11 +350,40 @@ public class Main {
                 oScreen = new Matrix(iScreen);
                 oScreen.paste(tempBlk, top, left);
 
-                System.out.println("게임을 다시 시작 합니다");
                 printScreen(oScreen);
                 newBlockNeeded = false;
 
             }
         }
+    }
+    public static void main5(String[] args) throws MatrixException {
+        int first_left = iScreenDw + iScreenDx/2 - 2;
+        int idxBlockDegree = 0;
+        int idxBlockType = random.nextInt(7);
+        int top = iScreenDy - 1;
+        int left = iScreenDw;
+        //??
+        int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
+        char key;
+        boolean newBlockNeeded = false;
+        int[][] temp =  {
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+
+        };
+
+
+        Matrix iScreen = new Matrix(arrayScreen);
+        //테트리스 배경 및 테두리(변하지 않음)
+        Matrix currBlk =  new Matrix(temp);
+        Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+        tempBlk = tempBlk.add(currBlk);
+        Matrix oScreen = new Matrix(iScreen);
+        oScreen.paste(tempBlk, top, left);
+        printScreen(oScreen);
+        System.out.println();
+        //test용
+        oScreen.deleteFullLine(iScreenDw);
+        printScreen(oScreen);
+        System.out.println();
     }
 }
