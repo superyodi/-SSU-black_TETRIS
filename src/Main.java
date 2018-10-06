@@ -264,6 +264,28 @@ public class Main {
                return temp;
         }
     }
+   private  static  void deleteFullLine(Matrix obj, int dw) throws MatrixException {
+        Matrix aLine;
+        boolean full_line = false;
+        int fulled_y ;
+
+        //search full line
+        for (int y = 0; y < obj.get_dy()-dw; y++) {
+            aLine = obj.clip(y, dw, y+1,obj.get_dx()-dw );
+            if (aLine.sum() >= aLine.get_dx()) {
+                fulled_y = y;
+                for( int x = dw; x < obj.get_dx()-dw; x++)
+                    obj.get_array()[fulled_y][x] = 0;
+
+                //0부터 full line 이전까지 clip
+                Matrix tmp = obj.clip(0, dw, fulled_y , obj.get_dx()-dw);
+                obj.paste(tmp, 1, dw);
+                //맨 윗라인 초기화
+                for( int x = dw; x < obj.get_dx()-dw; x++)
+                    obj.get_array()[0][x] = 0;
+            }
+        }
+    }
 
 
     public static void main(String[] args) throws Exception {
@@ -323,15 +345,21 @@ public class Main {
                     case ' ': newBlockNeeded = true; break;
                     //s, ' ' 는 바닥과 충돌이니까 성공적 -> 새로운 난수 블럭 생성
                 }
-                tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
-                tempBlk = tempBlk.add(currBlk);
-                //충돌하지 않는 위치에 다시 clip() & add()
+                try {
+                    tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                    tempBlk = tempBlk.add(currBlk);
+                    //충돌하지 않는 위치에 다시 clip() & add()
+                } catch (MatrixException e) {
+                    e.printStackTrace();
+                    System.out.println(e.getMessage());
+                    System.out.println("블록이 범위를 벗어났습니다.");
+                }
             }
             oScreen = new Matrix(iScreen);
             oScreen.paste(tempBlk, top, left);
             printScreen(oScreen);System.out.println();
             //full line delete
-            oScreen.deleteFullLine(iScreenDw);
+           deleteFullLine(oScreen, iScreenDw);
             if(newBlockNeeded) {
                 //바닥충돌 경우
                 //위치 재설정

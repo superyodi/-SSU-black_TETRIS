@@ -143,41 +143,16 @@ public class Matrix {
            return false;
     }
 
-    public int  searchFullLine(int dw) throws MatrixException {
-        //dw는 테두리
-        Matrix aLine;
-        boolean full_line = false;
 
-        for (int y = 0; y < dy-dw; y++) {
-            aLine = clip(y, dw, y+1,dx-dw );
-            if (aLine.sum() >= aLine.dx)
-                return y;
-        }
-        return -1;
-    }
-    public void deleteFullLine(int dw) throws MatrixException {
-        int fulled_y = searchFullLine(dw);
-        if (fulled_y != -1) {
-            for( int x = dw; x < dx-dw; x++)
-                array[fulled_y][x] = 0;
-
-            //0부터 full line 이전까지 clip
-            Matrix tmp = clip(0, dw, fulled_y , dx-dw);
-            paste(tmp, 1, dw);
-            //맨 윗라인 초기화
-            for( int x = dw; x < dx-dw; x++)
-                array[0][x] = 0;
-        }
-    }
-//       Matrix int2bool() throws  Exception {
-//        //transform [int] to [boolean]
-//        Matrix temp = new Matrix(dy, dx);
-//        int t_array[][] = temp.get_array();
-//        for(int y = 0; y < dy; y++)
-//            for(int x = 0; x < dx; x++)
-//                t_array[y][x] = (array[y][x] != 0 ? 1: 0);
-//        return temp;
-//       }
+       Matrix int2bool() throws  Exception {
+        //transform [int] to [boolean]
+        Matrix temp = new Matrix(dy, dx);
+        int t_array[][] = temp.get_array();
+        for(int y = 0; y < dy; y++)
+            for(int x = 0; x < dx; x++)
+                t_array[y][x] = (array[y][x] != 0 ? 1: 0);
+        return temp;
+       }
 
 //      end of Matrix
 }
